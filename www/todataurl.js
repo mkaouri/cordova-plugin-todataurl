@@ -24,17 +24,18 @@ var exec = require('cordova/exec');
 var ToDataURL = {
 
     // Pass width and height of the bitmap data and get DataURL of the image.
-    getImageData: function (data, width, height, type, quality) {
+    getImageData: function (successCallback, failureCallback, data, width, height, type, quality) {
         if (typeof quality === 'number') {
             quality *= 100;
         } else {
             quality = 100;
         }
 
-        exec(null, null, "ToDataURL", "getImageData", [data, width, height, type, quality]);
+        exec(successCallback, failureCallback, "ToDataURL", "getImageData", [data, width, height, type, quality]);
     },
 
     initialize: function () {
+        /*
         var toDataURL = function (type, quality) {
             return ToDataURL.getImageData (
                 btoa (
@@ -59,30 +60,17 @@ var ToDataURL = {
         var _toDataURL = HTMLCanvasElement.prototype.toDataURL;
 
         HTMLCanvasElement.prototype.toDataURL = function (type, quality) {
-/*
-            var result = "data:,";
-            if (!(
-                typeof Ext === 'object' &&
-                Ext.os.is.Android &&
-                Ext.os.version.lt ('4.2')
-            )) {
-console.log ('ToDataURL::_toDataURL = ' + type + ", " + quality);
-                result = _toDataURL.apply (this, arguments);
-console.log ('ToDataURL::_toDataURL = ' + result);
-            }
+            result = _toDataURL.apply (this, arguments);
 
             if (result === "data:,") {
-*/
                 HTMLCanvasElement.prototype.toDataURL = toDataURL;
                 return this.toDataURL.apply (this, arguments);
-/*
             } else {
                 HTMLCanvasElement.prototype.toDataURL = _toDataURL;
                 return result;
             }
-*/
         };
-
+        */
     }
 
 };
