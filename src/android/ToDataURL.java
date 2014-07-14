@@ -38,12 +38,9 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
 
 public class ToDataURL extends CordovaPlugin {
 	private static final String LOG_TAG = "ToDataURL";
@@ -74,9 +71,6 @@ public class ToDataURL extends CordovaPlugin {
 	public boolean execute (String action, CordovaArgs args, final CallbackContext callbackContext) throws JSONException {
 		Log.v(LOG_TAG, "Executing action: " + action);
 
-		final Activity activity = this.cordova.getActivity ();
-		final Window window = activity.getWindow ();
-
 		if ("getImageData".equals (action)) {
 			try {
 				byte[] data = Base64.decode (args.getString (0), Base64.DEFAULT);// args.getArrayBuffer (0);
@@ -85,20 +79,20 @@ public class ToDataURL extends CordovaPlugin {
 				String type = args.getString (3);
 				int quality = args.getInt (4);
 
-				Log.i(LOG_TAG, "getImageData[" + type + "][" + quality + "] = " + width + "x" + height);
-				Log.i(LOG_TAG, "getImageData[" + data.length + "] = " + data);
+				// Log.i(LOG_TAG, "getImageData[" + type + "][" + quality + "] = " + width + "x" + height);
+				// Log.i(LOG_TAG, "getImageData[" + data.length + "] = " + data);
 
 				Bitmap bmp;
 				// bmp = BitmapFactory.decodeByteArray (data, 0, data.length/*, bmpO*/);
 				bmp = Bitmap.createBitmap (width, height, Bitmap.Config.ARGB_8888);
 				bmp.copyPixelsFromBuffer (ByteBuffer.wrap (data));
-				Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
+				// Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
 
 				ByteArrayOutputStream out = new ByteArrayOutputStream ();
 				bmp.compress ((type.endsWith ("jpeg") ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG), quality, out);
 
 				String dataURL = "data:" + type + ";base64," + Base64.encodeToString (out.toByteArray (), 0);
-				Log.i(LOG_TAG, "getImageData::dataURL = " + dataURL);
+				// Log.i(LOG_TAG, "getImageData::dataURL = " + dataURL);
 
 				PluginResult r = new PluginResult(PluginResult.Status.OK, dataURL);
 				callbackContext.sendPluginResult(r);
