@@ -32,32 +32,32 @@ var ToDataURL = {
         }
 
         exec(null, null, "ToDataURL", "getImageData", [data, width, height, type, quality]);
-    }
+    },
+
+    initialize: function () {
+
+        var toDataURL = function (type, quality) {
+            // var imageData = Array.prototype.slice.call (this.getContext ("2d").getImageData (0, 0, this.width, this.height).data);
+
+            return ToDataURL.getImageData (this.getContext ("2d").getImageData (0, 0, this.width, this.height).data, this.width, this.height, type, quality);
+        };
+
+        var _toDataURL = HTMLCanvasElement.prototype.toDataURL;
+
+        HTMLCanvasElement.prototype.toDataURL = function (type, quality) {
+            var result = _toDataURL.apply (this, arguments);
+
+            if (result === "data:,") {
+                HTMLCanvasElement.prototype.toDataURL = toDataURL;
+                return this.toDataURL ();
+            } else {
+                HTMLCanvasElement.prototype.toDataURL = _toDataURL;
+                return result;
+            }
+        };
+
+	}
 
 };
-
-(function () {
-
-    var toDataURL = function (type, quality) {
-        // var imageData = Array.prototype.slice.call (this.getContext ("2d").getImageData (0, 0, this.width, this.height).data);
-
-        return ToDataURL.getImageData (this.getContext ("2d").getImageData (0, 0, this.width, this.height).data, this.width, this.height, type, quality);
-    };
-
-    var _toDataURL = HTMLCanvasElement.prototype.toDataURL;
-
-    HTMLCanvasElement.prototype.toDataURL = function (type, quality) {
-        var result = _toDataURL.apply (this, arguments);
-
-        if (result === "data:,") {
-            HTMLCanvasElement.prototype.toDataURL = toDataURL;
-            return this.toDataURL ();
-        } else {
-            HTMLCanvasElement.prototype.toDataURL = _toDataURL;
-            return result;
-        }
-    };
-
-}) ();
 
 module.exports = ToDataURL;
