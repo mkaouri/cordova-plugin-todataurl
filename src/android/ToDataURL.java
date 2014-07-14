@@ -26,6 +26,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaArgs;
@@ -92,7 +93,10 @@ public class ToDataURL extends CordovaPlugin {
 				bmpO.inPreferredConfig = Bitmap.Config.ARGB_8888;
 				*/
 				Bitmap bmp;
-				bmp = BitmapFactory.decodeByteArray (data, 0, data.length/*, bmpO*/);
+				// bmp = BitmapFactory.decodeByteArray (data, 0, data.length/*, bmpO*/);
+				bmp = Bitmap.createBitmap (width, height, Bitmap.Config.ARGB_8888);
+				Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
+				bmp.copyPixelsFromBuffer (ByteBuffer.wrap (data));
 				Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
 
 				ByteArrayOutputStream out = new ByteArrayOutputStream ();
