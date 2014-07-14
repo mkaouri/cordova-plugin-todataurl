@@ -41,8 +41,6 @@
         <engine name="cordova" version=">=3.0.0" />
     </engines>
 
-    <dependency id="org.apache.cordova.device" url="https://github.com/apache/cordova-plugin-device" />
-
 
 
     <js-module src="www/todataurl.js" name="todataurl">
@@ -54,10 +52,6 @@
     <!-- android -->
     <platform name="android">
         <source-file src="src/android/ToDataURL.java" target-dir="src/org/apache/cordova/todataurl" />
-
-        <config-file target="AndroidManifest.xml" parent="/*">
-            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-        </config-file>
 
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="ToDataURL">
