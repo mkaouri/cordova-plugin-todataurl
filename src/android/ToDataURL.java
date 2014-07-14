@@ -79,10 +79,10 @@ public class ToDataURL extends CordovaPlugin {
 
 		if ("getImageData".equals (action)) {
 			try {
-				byte[] data = args.getArrayBuffer (0);
+				byte[] data = Base64.decode (args.getString (0), Base64.DEFAULT);// args.getArrayBuffer (0);
 				int width = args.getInt (1);
 				int height = args.getInt (2);
-				String type = args.getString(3);
+				String type = args.getString (3);
 				int quality = args.getInt (4);
 
 				Log.i(LOG_TAG, "getImageData[" + type + "][" + quality + "] = " + width + "x" + height);

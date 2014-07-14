@@ -25,38 +25,73 @@ var ToDataURL = {
 
     // Pass width and height of the bitmap data and get DataURL of the image.
     getImageData: function (data, width, height, type, quality) {
+console.log ('ToDataURL::getImageData');
         if (typeof quality === 'number') {
             quality *= 100;
         } else {
             quality = 100;
         }
+console.log ('ToDataURL::getImageData quality = ' + quality);
 
+console.log ('ToDataURL::getImageData = ' + data);
         exec(null, null, "ToDataURL", "getImageData", [data, width, height, type, quality]);
     },
 
     initialize: function () {
-
+console.log ('ToDataURL::initialize');
         var toDataURL = function (type, quality) {
+console.log ('ToDataURL::toDataURL = ' + type + ", " + quality);
             // var imageData = Array.prototype.slice.call (this.getContext ("2d").getImageData (0, 0, this.width, this.height).data);
 
-            return ToDataURL.getImageData (this.getContext ("2d").getImageData (0, 0, this.width, this.height).data, this.width, this.height, type, quality);
+            return ToDataURL.getImageData (
+                btoa (
+                // Array.prototype.slice.call (
+                    this.getContext ("2d").getImageData (
+                        0,
+                        0,
+                        this.width,
+                        this.height
+                    ).data
+                ),
+
+                this.width,
+                this.height,
+
+                type,
+                quality
+            );
         };
 
         var _toDataURL = HTMLCanvasElement.prototype.toDataURL;
 
         HTMLCanvasElement.prototype.toDataURL = function (type, quality) {
-            var result = _toDataURL.apply (this, arguments);
+/*
+            var result = "data:,";
+            if (!(
+                typeof Ext === 'object' &&
+                Ext.os.is.Android &&
+                Ext.os.version.lt ('4.2')
+            )) {
+console.log ('ToDataURL::_toDataURL = ' + type + ", " + quality);
+                result = _toDataURL.apply (this, arguments);
+console.log ('ToDataURL::_toDataURL = ' + result);
+            }
 
             if (result === "data:,") {
+*/
+console.log ('ToDataURL CUSTOM FUNCTION');
                 HTMLCanvasElement.prototype.toDataURL = toDataURL;
-                return this.toDataURL ();
+                return this.toDataURL.apply (this, arguments);
+/*
             } else {
+console.log ('ToDataURL NATIVE FUNCTION');
                 HTMLCanvasElement.prototype.toDataURL = _toDataURL;
                 return result;
             }
+*/
         };
 
-	}
+    }
 
 };
 
