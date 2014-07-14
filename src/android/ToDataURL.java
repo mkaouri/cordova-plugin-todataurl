@@ -46,7 +46,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class ToDataURL extends CordovaPlugin {
-	private static final String LOG_TAG = "ToDataURL";
+	private static final String LOG = "ToDataURL";
 
 	/**
 	 * Sets the context of the Command. This can then be used to do things like
