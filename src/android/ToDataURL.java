@@ -39,6 +39,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.util.Base64;
 import android.util.Log;
 
@@ -73,31 +75,69 @@ public class ToDataURL extends CordovaPlugin {
 
 		if ("getImageData".equals (action)) {
 			try {
-				byte[] data = Base64.decode (args.getString (0), Base64.DEFAULT);// args.getArrayBuffer (0);
+				// String encodedData = args.getString (0).replaceFirst ("^data:image/(png|jpg|jpeg);base64,", "");
+				// Log.i(LOG_TAG, "getImageData[" + encodedData.length () + "] = " + encodedData);
+
+				byte[] data = Base64.decode (args.getString (0).replaceFirst ("^data:image/(png|jpg|jpeg);base64,", ""), Base64.DEFAULT);// args.getArrayBuffer (0);
+				/*
 				int width = args.getInt (1);
 				int height = args.getInt (2);
-				String type = args.getString (3);
-				int quality = args.getInt (4);
+				*/
+				String type = args.getString (1);
+				int quality = args.getInt (2);
+				int orientation = args.getInt (3);
 
 				// Log.i(LOG_TAG, "getImageData[" + type + "][" + quality + "] = " + width + "x" + height);
 				// Log.i(LOG_TAG, "getImageData[" + data.length + "] = " + data);
 
-				Bitmap bmp;
-				// bmp = BitmapFactory.decodeByteArray (data, 0, data.length/*, bmpO*/);
+				Bitmap bmp = BitmapFactory.decodeByteArray (data, 0, data.length);
+				/*
 				bmp = Bitmap.createBitmap (width, height, Bitmap.Config.ARGB_8888);
 				bmp.copyPixelsFromBuffer (ByteBuffer.wrap (data));
+				*/
 				// Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
 
-				ByteArrayOutputStream out = new ByteArrayOutputStream ();
-				bmp.compress ((type.endsWith ("jpeg") ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG), quality, out);
+				try
+				{
+					final Matrix bitmapMatrix = new Matrix ();
 
-				String dataURL = "data:" + type + ";base64," + Base64.encodeToString (out.toByteArray (), 0);
-				// Log.i(LOG_TAG, "getImageData::dataURL = " + dataURL);
+					switch (orientation)
+					{
+						case 1:                                                                                       break;  // top left
+						case 2:                                                  bitmapMatrix.postScale (-1, 1);      break;  // top right
+						case 3:         bitmapMatrix.postRotate (180);                                                break;  // bottom right
+						case 4:         bitmapMatrix.postRotate (180);           bitmapMatrix.postScale (-1, 1);      break;  // bottom left
+						case 5:         bitmapMatrix.postRotate (90);            bitmapMatrix.postScale (-1, 1);      break;  // left top
+						case 6:         bitmapMatrix.postRotate (90);                                                 break;  // right top
+						case 7:         bitmapMatrix.postRotate (270);           bitmapMatrix.postScale (-1, 1);      break;  // right bottom
+						case 8:         bitmapMatrix.postRotate (270);                                                break;  // left bottom
+						default:                                                                                      break;  // Unknown
+					}
 
-				PluginResult r = new PluginResult(PluginResult.Status.OK, dataURL);
-				callbackContext.sendPluginResult(r);
+					// Create new bitmap.
+					bmp = Bitmap.createBitmap (bmp, 0, 0, bmp.getWidth (), bmp.getHeight (), bitmapMatrix, false);
 
-				return true;
+					ByteArrayOutputStream out = new ByteArrayOutputStream ();
+					bmp.compress ((type.endsWith ("jpeg") ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG), quality, out);
+
+					String dataURL = "data:" + type + ";base64," + Base64.encodeToString (out.toByteArray (), 0);
+					// Log.i(LOG_TAG, "getImageData::dataURL = " + dataURL);
+
+					PluginResult r = new PluginResult(PluginResult.Status.OK, dataURL);
+					callbackContext.sendPluginResult(r);
+
+					return true;
+				}
+				catch (Exception e)
+				{
+					// TODO: handle exception
+					callbackContext.error ("Create Bitmap Matrix");
+
+					PluginResult r = new PluginResult(PluginResult.Status.ERROR);
+					callbackContext.sendPluginResult(r);
+
+					return true;
+				}
 			}
 			catch (IllegalArgumentException e) {
 				callbackContext.error ("Illegal Argument Exception");

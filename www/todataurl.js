@@ -24,14 +24,14 @@ var exec = require('cordova/exec');
 var ToDataURL = {
 
     // Pass width and height of the bitmap data and get DataURL of the image.
-    getImageData: function (successCallback, failureCallback, data, width, height, type, quality) {
+    getImageData: function (successCallback, failureCallback, data, /*width, height, */type, quality, orientation) {
         if (typeof quality === 'number') {
             quality *= 100;
         } else {
             quality = 100;
         }
 
-        exec(successCallback, failureCallback, "ToDataURL", "getImageData", [data, width, height, type, quality]);
+        exec(successCallback, failureCallback, "ToDataURL", "getImageData", [data, /*width, height, */type, quality, orientation]);
     },
 
     initialize: function () {
