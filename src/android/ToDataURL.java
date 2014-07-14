@@ -40,7 +40,6 @@ import org.json.JSONException;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
@@ -87,20 +86,16 @@ public class ToDataURL extends CordovaPlugin {
 				int quality = args.getInt (4);
 
 				Log.i(LOG_TAG, "getImageData[" + type + "][" + quality + "] = " + width + "x" + height);
-				Log.i(LOG_TAG, "getImageData = " + data);
-				/*
-				BitmapFactory.Options bmpO = new BitmapFactory.Options ();
-				bmpO.inPreferredConfig = Bitmap.Config.ARGB_8888;
-				*/
+				Log.i(LOG_TAG, "getImageData[" + data.length + "] = " + data);
+
 				Bitmap bmp;
 				// bmp = BitmapFactory.decodeByteArray (data, 0, data.length/*, bmpO*/);
 				bmp = Bitmap.createBitmap (width, height, Bitmap.Config.ARGB_8888);
-				Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
 				bmp.copyPixelsFromBuffer (ByteBuffer.wrap (data));
 				Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
 
 				ByteArrayOutputStream out = new ByteArrayOutputStream ();
-				bmp.compress (Bitmap.CompressFormat.JPEG, quality, out);
+				bmp.compress ((type.endsWidth ("jpeg") ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG, quality, out);
 
 				String dataURL = "data:" + type + ";base64," + Base64.encodeToString (out.toByteArray (), 0);
 				Log.i(LOG_TAG, "getImageData::dataURL = " + dataURL);
