@@ -95,7 +95,7 @@ public class ToDataURL extends CordovaPlugin {
 				Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
 
 				ByteArrayOutputStream out = new ByteArrayOutputStream ();
-				bmp.compress ((type.endsWidth ("jpeg") ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG, quality, out);
+				bmp.compress ((type.endsWidth ("jpeg") ? Bitmap.CompressFormat.JPEG : Bitmap.CompressFormat.PNG), quality, out);
 
 				String dataURL = "data:" + type + ";base64," + Base64.encodeToString (out.toByteArray (), 0);
 				Log.i(LOG_TAG, "getImageData::dataURL = " + dataURL);
