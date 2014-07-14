@@ -79,7 +79,7 @@ public class ToDataURL extends CordovaPlugin {
 
 		if ("getImageData".equals (action)) {
 			try {
-				int[] data = Base64.decode (args.getString (0), Base64.DEFAULT);// args.getArrayBuffer (0);
+				byte[] data = Base64.decode (args.getString (0), Base64.DEFAULT);// args.getArrayBuffer (0);
 				int width = args.getInt (1);
 				int height = args.getInt (2);
 				String type = args.getString (3);
@@ -91,8 +91,7 @@ public class ToDataURL extends CordovaPlugin {
 				Bitmap bmp;
 				// bmp = BitmapFactory.decodeByteArray (data, 0, data.length/*, bmpO*/);
 				bmp = Bitmap.createBitmap (width, height, Bitmap.Config.ARGB_8888);
-				// bmp.copyPixelsFromBuffer (ByteBuffer.wrap (data));
-				bmp.setPixels (data, 0, width, 0, 0, width, height);
+				bmp.copyPixelsFromBuffer (ByteBuffer.wrap (data));
 				Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
 
 				ByteArrayOutputStream out = new ByteArrayOutputStream ();
