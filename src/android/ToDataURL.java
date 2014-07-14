@@ -46,7 +46,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 public class ToDataURL extends CordovaPlugin {
-	private static final String LOG = "ToDataURL";
+	private static final String LOG_TAG = "ToDataURL";
 
 	/**
 	 * Sets the context of the Command. This can then be used to do things like
@@ -85,21 +85,21 @@ public class ToDataURL extends CordovaPlugin {
 				String type = args.getString(3);
 				int quality = args.getInt (4);
 
-				Log.i(TAG, "getImageData[" + type + "][" + quality + "] = " + width + "x" + height);
-				Log.i(TAG, "getImageData = " + data);
+				Log.i(LOG_TAG, "getImageData[" + type + "][" + quality + "] = " + width + "x" + height);
+				Log.i(LOG_TAG, "getImageData = " + data);
 				/*
 				BitmapFactory.Options bmpO = new BitmapFactory.Options ();
 				bmpO.inPreferredConfig = Bitmap.Config.ARGB_8888;
 				*/
 				Bitmap bmp;
 				bmp = BitmapFactory.decodeByteArray (data, 0, data.length/*, bmpO*/);
-				Log.i(TAG, "getImageData::bmp = " + bmp);
+				Log.i(LOG_TAG, "getImageData::bmp = " + bmp);
 
 				ByteArrayOutputStream out = new ByteArrayOutputStream ();
 				bmp.compress (Bitmap.CompressFormat.JPEG, quality, out);
 
 				String dataURL = "data:" + type + ";base64," + Base64.encodeToString (out.toByteArray (), 0);
-				Log.i(TAG, "getImageData::dataURL = " + dataURL);
+				Log.i(LOG_TAG, "getImageData::dataURL = " + dataURL);
 
 				PluginResult r = new PluginResult(PluginResult.Status.OK, dataURL);
 				callbackContext.sendPluginResult(r);
