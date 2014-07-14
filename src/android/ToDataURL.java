@@ -114,12 +114,13 @@ public class ToDataURL extends CordovaPlugin {
 
 				return true;
 			}
-
+			/*
 			PluginResult r = new PluginResult (PluginResult.Status.NO_RESULT);
 			r.setKeepCallback (true);
 			callbackContext.sendPluginResult (r);
 
 			return true;
+			*/
 		}
 
 		return false;
