@@ -83,9 +83,9 @@ public class ToDataURL extends CordovaPlugin {
 				int width = args.getInt (1);
 				int height = args.getInt (2);
 				*/
-				String type = args.getString (1);
-				int quality = args.getInt (2);
-				int orientation = args.getInt (3);
+				String type = args.optString (1, "image/png");
+				int quality = args.optInt (2, 100);
+				int orientation = args.optInt (3, 0);
 
 				// Log.i(LOG_TAG, "getImageData[" + type + "][" + quality + "] = " + width + "x" + height);
 				// Log.i(LOG_TAG, "getImageData[" + data.length + "] = " + data);

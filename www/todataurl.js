@@ -27,8 +27,6 @@ var ToDataURL = {
     getImageData: function (successCallback, failureCallback, data, /*width, height, */type, quality, orientation) {
         if (typeof quality === 'number') {
             quality *= 100;
-        } else {
-            quality = 100;
         }
 
         exec(successCallback, failureCallback, "ToDataURL", "getImageData", [data, /*width, height, */type, quality, orientation]);
